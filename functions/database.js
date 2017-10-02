@@ -1,5 +1,12 @@
-var devices = [
-  {
+var users = {
+  '1': {
+    name: 'Taro',
+  }
+};
+
+
+var devices = {
+  '1': {
     id: "123",
     type: "action.devices.types.LIGHT",
     traits: [
@@ -15,6 +22,7 @@ var devices = [
     // attributes: optional
     // customData: optional
   }
-];
+};
 
 exports.devices = devices;
+exports.users = users;

@@ -1,15 +1,23 @@
 const db = require('./database');
 
+var devices = db.devices;
+var users = db.users;
+
 function sync(request, response) {
-  var devices = db.devices;
-  var res = {
+  var agentUserId = '1';
+  var deviceArray = [];
+
+  for (let key in devices)
+    deviceArray.push(devices[key]);
+
+  var responseData = {
     requestId: request.requestId,
     payload: {
-      agentUserId: "1836.15267389",
-      devices: devices,
+      agentUserId: agentUserId,
+      devices: deviceArray,
     }
   };
-  response.status(200).json(res);
+  response.status(200).json(responseData);
 }
 
 exports.sync = sync;
