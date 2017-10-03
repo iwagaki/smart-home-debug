@@ -3,12 +3,14 @@ const syncHandler = require('./sync-handler');
 const queryHandler = require('./query-handler');
 const executeHandler = require('./execute-handler');
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-
 // TODO
 // - How to handle a JSON parse error?
+// - Add an endpoint for device control
+//   - addDevice
+//   - updateDevice
+//   - deleteDevice
+//   - showDevices
+// - Add OAuth2
 
 exports.homeAutomation = functions.https.onRequest((request, response) => {
   var headers = request.headers;
