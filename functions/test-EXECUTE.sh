@@ -7,7 +7,7 @@ fi
 
 URL=$END_POINT/homeAutomation
 
-curl $URL -D - -H "Content-Type: application/json" -X POST -d @- <<EOF
+curl $URL -i -H "Content-Type: application/json" -X POST -d @- <<EOF
 {
   "requestId": "ff36a3cc-ec34-11e6-b1a0-64510650abcf",
   "inputs": [{
