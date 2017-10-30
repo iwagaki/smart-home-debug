@@ -7,20 +7,31 @@ var users = {
 
 var devices = {
   '1': {
-    id: "123",
-    type: "action.devices.types.LIGHT",
-    traits: [
-      "action.devices.traits.OnOff"
-    ],
-    name: {
-      defaultNames: ["Virtual Light"],
-      name: "Light 1",
-      // nicknames: optional
+    'sync_info': {
+      id: '123', // Required
+      type: 'action.devices.types.LIGHT', // Required
+      traits: [ // Required
+        'action.devices.traits.OnOff'
+      ],
+      name: { // Required
+        defaultNames: ['Virtual Light'], // Optional
+        name: 'Light 1', // Optional
+        // nicknames Optional
+      },
+      willReportState: true, // Required
+      // roomHint Optional
+      // structureHint Optional
+      // deviceInfo Optional
+      // attributes Optional
+      // customData Optional
     },
-    willReportState: true,
-    // deviceInfo: optional
-    // attributes: optional
-    // customData: optional
+    'query_info': {
+      '123': {
+        online: true,
+        on: true,
+        brightness: 100,
+      }
+    }
   }
 };
 

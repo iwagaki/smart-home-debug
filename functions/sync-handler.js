@@ -8,12 +8,14 @@ function sync(request, response) {
   var deviceArray = [];
 
   for (let key in devices)
-    deviceArray.push(devices[key]);
+    deviceArray.push(devices[key]['sync_info']);
 
   var responseData = {
     requestId: request.requestId,
     payload: {
-      agentUserId: agentUserId,
+      // errorCode
+      // debugString
+      agentUserId: agentUserId, // Requid for REQUEST_SYNC
       devices: deviceArray,
     }
   };
