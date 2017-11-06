@@ -3,24 +3,33 @@ const util = require('util');
 const syncHandler = require('./sync-handler');
 const queryHandler = require('./query-handler');
 const executeHandler = require('./execute-handler');
+const oauth = require('./oauth2');
+const express = require('express');
 
-// TODO
-// - How to handle a JSON parse error?
+
+// To share some variables between oauth and HA2 modules,
+// all endpoints are implemented under the single endpoint (/homeAutomation)
+var app = express();
+
+// TODO: How to handle a JSON parse error?
+
 
 function getUid(request) {
   if (request.headers.authorization) {
     let authorization_strings = request.headers.authorization.split(' ');
     if (authorization_strings[0].toLowerCase() == 'bearer') {
-      if (authorization_strings[1] == 'accesstoken1234') // TODO
-        return '1234';
+      if (authorization_strings[1] == oauth.accountManager.getAccessToken()) // TODO
+        return '1234'; // TODO
     }
   }
+
+  console.log('Bad access token: ' + oauth.accountManager.getAccessToken());
 
   return null;
 }
 
 // Home automation endpoint
-exports.homeAutomation = functions.https.onRequest((request, response) => {
+app.post('/', (request, response) => {
   var headers = request.headers;
   var body = request.body;
 
@@ -31,9 +40,11 @@ exports.homeAutomation = functions.https.onRequest((request, response) => {
     return;
   }
 
-  if (!body.requestId ||
-    !body.inputs ||
-    !body.inputs.length == 1) {
+  if (!body.hasOwnProperty('requestId') ||
+      !(typeof body.requestId == 'string') ||
+      !body.hasOwnProperty('inputs') ||
+      !Array.isArray(body.inputs) ||
+      !body.inputs.length == 1) {
     response.status(401).json({ error: 'bad request' });
     return;
   }
@@ -56,16 +67,9 @@ exports.homeAutomation = functions.https.onRequest((request, response) => {
   }
 });
 
-// device management endpoint
-//   - addDevice
-//   - updateDevice
-//   - deleteDevice
-//   - showDevices
-exports.updateDevices = functions.https.onRequest((request, response) => {
-});
 
 // oauth2 Authentication endpoint
-exports.oauth2Autherize = functions.https.onRequest((request, response) => {
+app.all('/auth',(request, response) => {
   var headers = request.headers;
   var body = request.body;
 
@@ -77,21 +81,23 @@ exports.oauth2Autherize = functions.https.onRequest((request, response) => {
   console.log(request.method, headers, body);
 
   if (response_type != 'code' ||
-    client_id != 'clientid1234') {
-    response.status(401).json({ error: 'Bad query' });
+    client_id != 'clientid1234') { // TODO
+    response.status(401).json({ error: 'invalid_client' });
     return;
   }
 
-  var auth_code = "authtoken1234"; // TODO
+  oauth.accountManager.updateAuthToken();
+
   response.redirect(util.format('%s?code=%s&state=%s',
     redirect_uri,
-    auth_code,
+    oauth.accountManager.getAuthToken(),
     state
   ));
 });
 
+
 // oauth2 Token endpoint
-exports.oauth2Token = functions.https.onRequest((request, response) => {
+app.post('/token', (request, response) => {
   var headers = request.headers;
   var body = request.body;
 
@@ -101,19 +107,48 @@ exports.oauth2Token = functions.https.onRequest((request, response) => {
 
   console.log(request.method, headers, body);
 
-  if (client_id != 'clientid1234' ||
-    client_secret != 'clientsecret1234' ||
-    ['authorization_code', 'refresh_token'].indexOf(grant_type) == -1) {
-    response.status(401).json({ error: 'bad header' });
+  if (client_id != 'clientid1234' || // TODO
+      client_secret != 'clientsecret1234') { // TODO
+    response.status(400).json({ error: 'invalid_client' });
+  }
+
+  if (['authorization_code', 'refresh_token'].indexOf(grant_type) == -1) {
+    response.status(400).json({ error: 'invalid_request' });
     return;
   }
 
+  if (grant_type == 'refresh_token') {
+    var refreshToken = request.query.refresh_token ? request.query.refresh_token : request.body.refresh_token;
+    if (refreshToken != oauth.accountManager.getRefreshToken()) {
+      console.log('Bad refresh token: expected:' + oauth.accountManager.getRefreshToken() + ' refresh_token: ' + refreshToken);
+      response.status(400).json({ error: 'invalid_grant' });
+      return;
+    }
+    console.log('*** refresh token ***');
+  } else if (grant_type == 'authorization_code') {
+    var code = request.query.code ? request.query.code : request.body.code;
+    if (code != oauth.accountManager.getAuthToken()) {
+      console.log('Bad auth token: expected:' + oauth.accountManager.getAuthToken() + ' code: ' + code);
+      response.status(400).json({ error: 'invalid_grant' });
+      return;
+    }
+    console.log('*** auth token ***');
+  }
+
+  oauth.accountManager.updateAccessToken();
+  oauth.accountManager.updateRefreshToken();
+  var newAccessToken = oauth.accountManager.getAccessToken();
+  var newRefreshToken = oauth.accountManager.getRefreshToken();
+
   var responseData = {
     token_type: 'bearer', // Required
-    access_token: 'accesstoken1234', // Required
-    refresh_token: 'authtoken1234', // Required
-    expires_in: 60 // Optional (sec)
+    access_token: newAccessToken, // Required // TODO
+    refresh_token: newRefreshToken, // Required // TODO
+    expires_in: 3600 // Optional (sec) // TODO
   };
 
+  console.log(responseData);
   response.status(200).json(responseData);
 });
+
+exports.homeAutomation = functions.https.onRequest(app);

@@ -1,27 +1,27 @@
 #!/bin/bash
 
-if [ "${END_POINT:-UNDEF}" = "UNDEF" ]; then
-    echo "Please define END_POINT"
-    exit
+if [ "${ENDPOINT:-UNDEF}" = "UNDEF" ]; then
+    echo "Please define ENDPOINT"
+    ENDPOINT=http://localhost:5000/home-debugger/us-central1
 fi
 
-URL=$END_POINT/homeAutomation
+URL=$ENDPOINT/homeAutomation
 
-curl $URL -i -H "Content-Type: application/json" -X POST -d @- <<EOF
+curl $URL -i -H "Content-Type: application/json" -H "Authorization: Bearer accesstoken1000" -X POST -d @- <<EOF
 {
   "requestId": "ff36a3cc-ec34-11e6-b1a0-64510650abcf",
   "inputs": [{
     "intent": "action.devices.QUERY",
     "payload": {
       "devices": [{
-        "id": "123",
+        "id": "ID1",
         "customData": {
           "fooValue": 74,
           "barValue": true,
           "bazValue": "foo"
         }
       },{
-        "id": "456",
+        "id": "ID2",
         "customData": {
           "fooValue": 12,
           "barValue": false,
@@ -32,3 +32,4 @@ curl $URL -i -H "Content-Type: application/json" -X POST -d @- <<EOF
   }]
 }
 EOF
+echo # for CR

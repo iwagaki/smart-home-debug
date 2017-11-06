@@ -1,14 +1,11 @@
 const db = require('./database');
 
-var devices = db.devices;
+var deviceManager = db.deviceManager;
 var users = db.users;
 
 function sync(request, response) {
-  var agentUserId = '1';
-  var deviceArray = [];
-
-  for (let key in devices)
-    deviceArray.push(devices[key]['sync_info']);
+  var agentUserId = '1'; // TODO: should be an unique hash number for each user
+  var devicesArray = deviceManager.getSyncDevicesArray();
 
   var responseData = {
     requestId: request.requestId,
@@ -16,7 +13,7 @@ function sync(request, response) {
       // errorCode
       // debugString
       agentUserId: agentUserId, // Requid for REQUEST_SYNC
-      devices: deviceArray,
+      devices: devicesArray,
     }
   };
   response.status(200).json(responseData);

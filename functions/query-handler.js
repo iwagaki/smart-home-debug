@@ -1,17 +1,27 @@
+const db = require('./database');
+
+var deviceManager = db.deviceManager;
+var users = db.users;
+
 function query(request, response) {
   var input = request.body.inputs[0];
 
-  if (!input.payload || !input.payload.devices) {
+  if (!input.hasOwnProperty('payload') || !input.payload.hasOwnProperty('devices') || !Array.isArray(input.payload.devices)) {
     response.status(401).json({error: 'bad request'});
     return;
   }
 
-  // var devices = body.payload.devices;
-  // var payloadDevices = {};
-  // for (let i = 0; i < devices.length; i++) {
-  // }
+  var devicesDict = deviceManager.getQueryDevicesDict(input.payload.devices);
 
-  response.status(200).end();
+  var responseData = {
+    requestId: request.requestId,
+    payload: {
+      // errorCode
+      // debugString
+      devices: devicesDict,
+    }
+  };
+  response.status(200).json(responseData);
 }
 
 exports.query = query;
