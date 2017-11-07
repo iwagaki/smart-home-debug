@@ -1,14 +1,14 @@
 const db = require('./database');
 
 var deviceManager = {
-  getSyncDevicesArray : function() {
+  getSyncDevicesArray: function () {
     var devicesArray = [];
     for (var key in db.devices) {
       devicesArray.push(db.devices[key].getSyncData());
     }
     return devicesArray;
   },
-  getQueryDevicesDict : function(devicesArray) {
+  getQueryDevicesDict: function (devicesArray) {
     var devicesDict = {};
     for (var i = 0; i < devicesArray.length; i++) {
       if (devicesArray[i].id in db.devices)
@@ -18,7 +18,7 @@ var deviceManager = {
     }
     return devicesDict;
   },
-  getExecuteCommandsArray : function(commandsArray) {
+  getExecuteCommandsArray: function (commandsArray) {
     var updateDevices = {};
 
     for (var i = 0; i < commandsArray.length; i++) {
@@ -46,7 +46,7 @@ var deviceManager = {
               continue;
             }
 
-            devices[executionDevices[j].id].execute(command);
+            db.devices[executionDevices[j].id].execute(command);
           }
         } else {
           console.log('Bad ID') // TODO
@@ -56,7 +56,7 @@ var deviceManager = {
 
     var responseArray = [];
     for (key in updateDevices) {
-      var dict1 = devices[key].getQueryData();
+      var dict1 = db.devices[key].getQueryData();
       var key = Object.keys(dict1)[0];
       var responseData = {
         ids: [key],

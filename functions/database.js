@@ -3,17 +3,41 @@ const base = require('./base-device');
 
 var devices = {};
 
-devices['ID1'] = Object.create(base.baseDevice);
-devices['ID1'].id = 'ID1';
-devices['ID1'].type = 'action.devices.types.LIGHT';
-devices['ID1'].name = 'Light 1';
-devices['ID1'].traits = [ Object.create(traitsObject.onOff), Object.create(traitsObject.brightness) ];
+{
+    let device = Object.create(base.baseDevice);
+    device.id = 'ID1';
+    device.type = 'action.devices.types.LIGHT';
+    device.name = 'Light 1';
+    device.traits = [Object.create(traitsObject.onOff), Object.create(traitsObject.brightness)];
+    devices[device.id] = device;
+}
 
-devices['ID2'] = Object.create(base.baseDevice);
-devices['ID2'].id = 'ID2';
-devices['ID2'].type = 'action.devices.types.LIGHT';
-devices['ID2'].name = 'Light 2';
-devices['ID2'].traits = [ Object.create(traitsObject.onOff) ];
+{
+    let device = Object.create(base.baseDevice);
+    device.id = 'ID2';
+    device.type = 'action.devices.types.LIGHT';
+    device.name = 'Light 2';
+    device.traits = [Object.create(traitsObject.onOff)]
+    devices[device.id] = device;
+}
+
+{
+    let device = Object.create(base.baseDevice);
+    device.id = 'ID3';
+    device.type = 'action.devices.types.THERMOSTAT';
+    device.name = 'Thermostat 1';
+    device.traits = [Object.create(traitsObject.temperatureSetting)]
+    devices[device.id] = device;
+}
+
+{
+    let device = Object.create(base.baseDevice);
+    device.id = 'ID4';
+    device.type = 'action.devices.types.THERMOSTAT';
+    device.name = 'Thermostat 2';
+    device.traits = [Object.create(traitsObject.temperatureSetting)]
+    devices[device.id] = device;
+}
 
 
 exports.devices = devices;

@@ -41,10 +41,10 @@ app.post('/', (request, response) => {
   }
 
   if (!body.hasOwnProperty('requestId') ||
-      !(typeof body.requestId == 'string') ||
-      !body.hasOwnProperty('inputs') ||
-      !Array.isArray(body.inputs) ||
-      !body.inputs.length == 1) {
+    !(typeof body.requestId == 'string') ||
+    !body.hasOwnProperty('inputs') ||
+    !Array.isArray(body.inputs) ||
+    !body.inputs.length == 1) {
     response.status(401).json({ error: 'bad request' });
     return;
   }
@@ -69,7 +69,7 @@ app.post('/', (request, response) => {
 
 
 // oauth2 Authentication endpoint
-app.all('/auth',(request, response) => {
+app.all('/auth', (request, response) => {
   var headers = request.headers;
   var body = request.body;
 
@@ -108,7 +108,7 @@ app.post('/token', (request, response) => {
   console.log(request.method, headers, body);
 
   if (client_id != 'clientid1234' || // TODO
-      client_secret != 'clientsecret1234') { // TODO
+    client_secret != 'clientsecret1234') { // TODO
     response.status(400).json({ error: 'invalid_client' });
   }
 

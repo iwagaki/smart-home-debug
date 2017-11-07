@@ -11,7 +11,7 @@
     "automation" :
     {
       "name": "automation",
-      "url": "https://debuglight.ngrok.io/home-debugger/us-central1/homeAutomation"
+      "url": "https://debuglight.ngrok.io/home-debugger-c86f2/us-central1/homeAutomation"
     }
   }
 }
