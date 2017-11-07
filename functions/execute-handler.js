@@ -1,7 +1,6 @@
-const db = require('./database');
+const devices = require('./devices');
 
-var deviceManager = db.deviceManager;
-var users = db.users;
+var deviceManager = devices.deviceManager;
 
 function execute(request, response) {
   var input = request.body.inputs[0];

@@ -1,7 +1,6 @@
-const db = require('./database');
+const devices = require('./devices');
 
-var deviceManager = db.deviceManager;
-var users = db.users;
+var deviceManager = devices.deviceManager;
 
 function sync(request, response) {
   var agentUserId = '1'; // TODO: should be an unique hash number for each user
