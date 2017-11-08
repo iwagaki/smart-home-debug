@@ -1,31 +1,89 @@
+const admin = require('firebase-admin');
+const serviceAccount = require('./home-debugger-a13a19250360.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://home-debugger-c86f2.firebaseio.com/'
+});
+
+
+function initilizeDatabase() {
+  const ref = admin.database().ref('/users') // .push();
+
+  ref.set({
+    authTokenCount: 1000,
+    accessTokenCount: 1000,
+    refreshTokenCount: 1000
+  }, error => {
+    if (error) {
+      console.log("save error", error.message);
+    } else {
+      console.log("save success");
+    }
+  });
+}
+
+//initilizeDatabase();
+
+
+
 var accountManager = {
-  authTokenCount: 1000,
-  accessTokenCount: 1000,
-  refreshTokenCount: 1000,
-
-  getAuthToken: function() {
-    return 'authtoken' + this.authTokenCount.toString();
+  tokens: {
+    authTokenCount: 1000,
+    accessTokenCount: 1000,
+    refreshTokenCount: 1000
   },
 
-  getAccessToken: function() {
-    return 'accesstoken' + this.accessTokenCount.toString();
+  loadDatabase: function () {
+    admin.database().ref("/users").once("value")
+      .then(snapshot => {
+        this.tokens = snapshot.val();
+        console.log(this.tokens);
+      }).catch(error => {
+        console.log("Can't access to database", error);
+      });
   },
 
-  getRefreshToken: function() {
-    return 'refreshtoken' + this.refreshTokenCount.toString();
+  updateDatabase: function () {
+    const ref = admin.database().ref('/users') // .push();
+
+    ref.set(this.tokens, error => {
+      if (error) {
+        console.log("save error", error.message);
+      } else {
+        console.log("save success");
+      }
+    });
   },
 
-  updateAuthToken: function() {
-    // this.authTokenCount++;
+  getAuthToken: function () {
+    return 'authtoken' + this.tokens.authTokenCount.toString();
   },
 
-  updateAccessToken: function() {
-    // this.accessTokenCount++;
+  getAccessToken: function () {
+    return 'accesstoken' + this.tokens.accessTokenCount.toString();
   },
 
-  updateRefreshToken: function() {
-    // this.refreshTokenCount++;
+  getRefreshToken: function () {
+    return 'refreshtoken' + this.tokens.refreshTokenCount.toString();
+  },
+
+  updateAuthToken: function () {
+    this.tokens.authTokenCount++;
+    this.updateDatabase();
+  },
+
+  updateAccessToken: function () {
+    this.tokens.accessTokenCount++;
+    this.updateDatabase();
+  },
+
+  updateRefreshToken: function () {
+    this.tokens.refreshTokenCount++;
+    this.updateDatabase();
   }
 };
+
+accountManager.loadDatabase();
 
 exports.accountManager = accountManager;
