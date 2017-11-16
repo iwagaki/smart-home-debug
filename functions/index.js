@@ -145,7 +145,7 @@ app.post('/token', (request, response) => {
     token_type: 'bearer', // Required
     access_token: newAccessToken, // Required // TODO
     refresh_token: newRefreshToken, // Required // TODO
-    expires_in: 3600 // Optional (sec) // TODO
+    expires_in: 60 // Optional (sec) // TODO
   };
 
   console.log(responseData);

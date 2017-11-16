@@ -7,11 +7,11 @@ admin.initializeApp({
 });
 
 var realtimeDatabase = {
-  loadDatabase: function (key) {
+  loadDatabase: function (key, obj) {
     admin.database().ref(key).once("value")
       .then(snapshot => {
-        var obj = snapshot.val();
-        return obj;
+        obj = snapshot.val();
+        console.log('loaded: ' + JSON.stringify(obj));
       }).catch(error => {
         console.log("Can't access to database", error);
       });
@@ -23,8 +23,12 @@ var realtimeDatabase = {
     ref.set(obj, error => {
       if (error) {
         console.log("save error", error.message);
+      } else {
+        console.log('saved: ' + JSON.stringify(obj));
       }
     });
   },
 
 };
+
+exports.realtimeDatabase = realtimeDatabase;
