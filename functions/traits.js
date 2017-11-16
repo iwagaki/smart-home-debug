@@ -118,6 +118,49 @@ var TemperatureSettingTrait = {
 };
 
 
+var togglesTrait = {
+  mode_cool: true,
+
+  execute: function (command) {
+    if (command.command == 'action.devices.commands.SetToggles') {
+      if (command.params.hasOwnProperty('updateToggleSettings') && typeof command.params.updateToggleSettings == 'object' &&
+          command.params.updateToggleSettings.hasOwnProperty('cool')) {
+        this.mode_cool = this.command.params.updateToggleSettings.cool;
+      } else {
+        console.log('Bad request'); // TODO
+        return;
+      }
+    }
+  },
+
+  query: function (request) {
+    return {
+      currentToggleSettings: [{
+        cool: this.mode_cool,
+        lang: 'en'
+      }]
+    };
+  },
+
+  getTraitName: function () {
+    return 'action.devices.traits.Toggles';
+  },
+
+  getAttributes: function () {
+    return {
+      availableToggles: [{
+        name: 'cool',
+        name_values: [{
+          name_synonym: ['cool', 'power cool'],
+          lang: 'en'
+        }]
+      }]
+    };
+  }
+};
+
+
 exports.onOff = onOffTrait;
 exports.brightness = brightnessTrait;
 exports.temperatureSetting = TemperatureSettingTrait;
+exports.toggles = togglesTrait;

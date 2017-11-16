@@ -17,7 +17,7 @@ var devices = {};
     device.id = 'ID2';
     device.type = 'action.devices.types.LIGHT';
     device.name = 'Light 2';
-    device.traits = [Object.create(traitsObject.onOff)]
+    device.traits = [Object.create(traitsObject.onOff)];
     devices[device.id] = device;
 }
 
@@ -26,7 +26,7 @@ var devices = {};
     device.id = 'ID3';
     device.type = 'action.devices.types.THERMOSTAT';
     device.name = 'Thermostat 1';
-    device.traits = [Object.create(traitsObject.temperatureSetting)]
+    device.traits = [Object.create(traitsObject.temperatureSetting)];
     devices[device.id] = device;
 }
 
@@ -35,7 +35,16 @@ var devices = {};
     device.id = 'ID4';
     device.type = 'action.devices.types.THERMOSTAT';
     device.name = 'Thermostat 2';
-    device.traits = [Object.create(traitsObject.temperatureSetting)]
+    device.traits = [Object.create(traitsObject.temperatureSetting)];
+    devices[device.id] = device;
+}
+
+{
+    let device = Object.create(base.baseDevice);
+    device.id = 'ID5';
+    device.type = 'action.devices.types.DRYER';
+    device.name = 'Dryer 2';
+    device.traits = [Object.create(traitsObject.toggles)];
     devices[device.id] = device;
 }
 
