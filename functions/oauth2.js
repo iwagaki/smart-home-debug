@@ -38,7 +38,7 @@ var accountManager = {
     admin.database().ref("/users").once("value")
       .then(snapshot => {
         this.tokens = snapshot.val();
-        console.log(this.tokens);
+        console.log('loading...' + JSON.stringify(this.tokens));
       }).catch(error => {
         console.log("Can't access to database", error);
       });

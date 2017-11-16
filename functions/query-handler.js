@@ -6,7 +6,7 @@ function query(body, response) {
   var input = body.inputs[0];
 
   if (!input.hasOwnProperty('payload') || !input.payload.hasOwnProperty('devices') || !Array.isArray(input.payload.devices)) {
-    response.status(401).json({error: 'bad request'});
+    response.status(401).json({ error: 'bad request' });
     return;
   }
 
