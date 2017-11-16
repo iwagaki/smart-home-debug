@@ -1,13 +1,23 @@
 const devices = require('./devices');
+//'use strict';
 
 var deviceManager = devices.deviceManager;
 
-function sync(request, response) {
-  var agentUserId = '1'; // TODO: should be an unique hash number for each user
+function sleep(seconds) {
+  console.log('Sleeping ' + seconds + 's');
+  setTimeout(() => {
+    console.log('Waked up');
+  }, seconds * 1000);
+}
+
+function sync(body, response) {
+  var agentUserId = '200'; // TODO: should be an unique hash number for each user
   var devicesArray = deviceManager.getSyncDevicesArray();
 
+  sleep(5);
+
   var responseData = {
-    requestId: request.requestId,
+    requestId: body.requestId,
     payload: {
       // errorCode
       // debugString
@@ -15,6 +25,8 @@ function sync(request, response) {
       devices: devicesArray,
     }
   };
+
+  console.log(JSON.stringify(responseData));
   response.status(200).json(responseData);
 }
 

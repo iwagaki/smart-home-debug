@@ -2,8 +2,8 @@ const devices = require('./devices');
 
 var deviceManager = devices.deviceManager;
 
-function execute(request, response) {
-  var input = request.body.inputs[0];
+function execute(body, response) {
+  var input = body.inputs[0];
 
   if (!input.hasOwnProperty('payload') || !input.payload.hasOwnProperty('commands') || !Array.isArray(input.payload.commands)) {
     response.status(401).json({error: 'bad request'});
@@ -13,7 +13,7 @@ function execute(request, response) {
   var commandsArray = deviceManager.getExecuteCommandsArray(input.payload.commands);
 
   var responseData = {
-    requestId: request.requestId,
+    requestId: body.requestId,
     payload: {
       // errorCode
       // debugString

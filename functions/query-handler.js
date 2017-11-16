@@ -2,8 +2,8 @@ const devices = require('./devices');
 
 var deviceManager = devices.deviceManager;
 
-function query(request, response) {
-  var input = request.body.inputs[0];
+function query(body, response) {
+  var input = body.inputs[0];
 
   if (!input.hasOwnProperty('payload') || !input.payload.hasOwnProperty('devices') || !Array.isArray(input.payload.devices)) {
     response.status(401).json({error: 'bad request'});
@@ -13,7 +13,7 @@ function query(request, response) {
   var devicesDict = deviceManager.getQueryDevicesDict(input.payload.devices);
 
   var responseData = {
-    requestId: request.requestId,
+    requestId: body.requestId,
     payload: {
       // errorCode
       // debugString

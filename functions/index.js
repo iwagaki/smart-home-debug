@@ -33,7 +33,8 @@ app.post('/', (request, response) => {
   var headers = request.headers;
   var body = request.body;
 
-  console.log(request.method, headers, body);
+  console.log(request.method, headers);
+  console.log(JSON.stringify(body));
 
   if (!getUid(request)) {
     response.status(401).json({ error: 'bad authorization' });
@@ -54,13 +55,13 @@ app.post('/', (request, response) => {
 
   switch (intent) {
     case "action.devices.SYNC":
-      syncHandler.sync(request, response);
+      syncHandler.sync(body, response);
       break;
     case "action.devices.QUERY":
-      queryHandler.query(request, response);
+      queryHandler.query(body, response);
       break;
     case "action.devices.EXECUTE":
-      executeHandler.execute(request, response);
+      executeHandler.execute(body, response);
       break;
     default:
       response.status(401).json({ error: 'bad intent' });
