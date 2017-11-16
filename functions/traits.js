@@ -82,6 +82,7 @@ var TemperatureSettingTrait = {
     thermostatTemperatureSetpoint: 25.0,
     thermostatTemperatureAmbient: 25.0,
     thermostatHumidityAmbient: 45.0,
+    lastThermostatMode: 'heatcool'
   },
 
   execute: function (command) {
@@ -109,8 +110,14 @@ var TemperatureSettingTrait = {
     }
     if (command.command == 'action.devices.commands.ThermostatSetMode') {
       if (command.params.hasOwnProperty('thermostatMode') && typeof command.params.thermostatMode == 'string' &&
-        ['cool', 'heat', 'off', 'heatcool'].indexOf(command.params.thermostatMode) != -1) {
-        this.thermostatMode = command.params.thermostatMode;
+        ['cool', 'heat', 'on', 'off', 'heatcool'].indexOf(command.params.thermostatMode) != -1) {
+        let targetMode = command.params.thermostatMode;
+        if (targetMode == 'on') {
+          targetMode = this.data.lastThermostatMode;
+        } else if (targetMode == 'off') {
+          this.data.lastThermostatMode = this.data.thermostatMode;
+        }
+        this.data.thermostatMode = targetMode;
       } else {
         console.log('Bad request'); // TODO
         return;
@@ -133,7 +140,7 @@ var TemperatureSettingTrait = {
 
   getAttributes: function () {
     return {
-      availableThermostatModes: 'off,heat,cool,on',
+      availableThermostatModes: 'off,heat,cool,on,heatcool',
       thermostatTemperatureUnit: 'C'
     };
   },
