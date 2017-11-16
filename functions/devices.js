@@ -1,5 +1,14 @@
 const db = require('./database');
 
+// const admin = require('firebase-admin');
+// const serviceAccount = require('./home-debugger-a13a19250360.json');
+
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: 'https://home-debugger-c86f2.firebaseio.com/'
+// });
+
 var deviceManager = {
   getSyncDevicesArray: function () {
     var devicesArray = [];
@@ -66,6 +75,33 @@ var deviceManager = {
       responseArray.push(responseData);
     }
     return responseArray;
+  },
+
+  loadDatabase: function () {
+    // admin.database().ref("/devices").once("value")
+    //   .then(snapshot => {
+    //     database = snapshot.val();
+
+    //   }).catch(error => {
+    //     console.log("Can't access to database", error);
+    //   });
+  },
+
+  updateDatabase: function () {
+    const ref = admin.database().ref('/users');
+
+    var databaseData = {};
+
+    for (var key in db.devices)
+      databaseData[key] = db.devices[key].getData();
+
+    // ref.set(databaseData, error => {
+    //   if (error) {
+    //     console.log("devices: save error", error.message);
+    //   } else {
+    //     console.log('devices: save success' + databaseData);
+    //   }
+    // });
   }
 };
 

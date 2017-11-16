@@ -45,6 +45,20 @@ var baseDevice = {
   execute: function (command) {
     for (var i = 0; i < this.traits.length; i++)
       this.traits[i].execute(command);
+  },
+
+  getData: function () {
+    var dataArray = [];
+    for (var i = 0; i < this.traits.length; i++)
+      dataArray.push(this.traits[i].getData());
+
+    return dataArray;
+  },
+
+  setData: function (dataArray) {
+    if (dataArray.length == this.traits.length)
+      for (var i = 0; i < this.traits.length; i++)
+        this.traits[i].setData(dataArray[i]);
   }
 };
 

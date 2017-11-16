@@ -1,11 +1,13 @@
 var brightnessTrait = {
-  brightness: 100,
+  data: {
+    brightness: 100,
+  },
 
   execute: function (command) {
     if (command.command == 'action.devices.commands.BrightnessAbsolute') {
       if (command.params.hasOwnProperty('brightness') && typeof command.params.brightness == 'number' &&
         command.params.brightness >= 0 && command.params.brightness <= 100) {
-        this.brightness = command.params.brightness;
+        this.data.brightness = command.params.brightness;
       } else {
         console.log('Bad request'); // TODO
         return;
@@ -14,7 +16,7 @@ var brightnessTrait = {
   },
 
   query: function (request) {
-    return { brightness: this.brightness };
+    return { brightness: this.data.brightness };
   },
 
   getTraitName: function () {
@@ -23,18 +25,28 @@ var brightnessTrait = {
 
   getAttributes: function () {
     return {};
+  },
+
+  getData: function () {
+    return this.data;
+  },
+
+  setData: function (data) {
+    this.data = data;
   }
 
 };
 
 
 var onOffTrait = {
-  on: true,
+  data: {
+    on: true,
+  },
 
   execute: function (command) {
     if (command.command == 'action.devices.commands.OnOff') {
       if (command.params.hasOwnProperty('on') && typeof command.params.on == 'boolean') {
-        this.on = command.params.on;
+        this.data.on = command.params.on;
       } else {
         console.log('Bad request'); // TODO
         return;
@@ -43,7 +55,7 @@ var onOffTrait = {
   },
 
   query: function () {
-    return { on: this.on };
+    return { on: this.data.on };
   },
 
   getTraitName: function () {
@@ -52,20 +64,30 @@ var onOffTrait = {
 
   getAttributes: function () {
     return {};
+  },
+
+  getData: function () {
+    return this.data;
+  },
+
+  setData: function (data) {
+    this.data = data;
   }
 };
 
 
 var TemperatureSettingTrait = {
-  thermostatMode: 'off',
-  thermostatTemperatureSetpoint: 25.0,
-  thermostatTemperatureAmbient: 25.0,
-  thermostatHumidityAmbient: 45.0,
+  data: {
+    thermostatMode: 'off',
+    thermostatTemperatureSetpoint: 25.0,
+    thermostatTemperatureAmbient: 25.0,
+    thermostatHumidityAmbient: 45.0,
+  },
 
   execute: function (command) {
     if (command.command == 'action.devices.commands.ThermostatTemperatureSetpoint') {
       if (command.params.hasOwnProperty('thermostatTemperatureSetpoint') && typeof command.params.thermostatTemperatureSetpoint == 'number') {
-        this.thermostatTemperatureSetpoint = command.params.thermostatTemperatureSetpoint;
+        this.data.thermostatTemperatureSetpoint = command.params.thermostatTemperatureSetpoint;
       } else {
         console.log('Bad request'); // TODO
         return;
@@ -73,13 +95,13 @@ var TemperatureSettingTrait = {
     }
     if (command.command == 'action.devices.commands.ThermostatTemperatureSetRange') {
       if (command.params.hasOwnProperty('thermostatTemperatureSetpointHigh') && typeof command.params.thermostatTemperatureSetpointHigh == 'number') {
-        this.thermostatTemperatureSetpointHigh = command.params.thermostatTemperatureSetpointHigh;
+        this.data.thermostatTemperatureSetpointHigh = command.params.thermostatTemperatureSetpointHigh;
       } else {
         console.log('Bad request'); // TODO
         return;
       }
       if (command.params.hasOwnProperty('thermostatTemperatureSetpointLow') && typeof command.params.thermostatTemperatureSetpointHigh == 'number') {
-        this.thermostatTemperatureSetpointLow = command.params.thermostatTemperatureSetpointLow;
+        this.data.thermostatTemperatureSetpointLow = command.params.thermostatTemperatureSetpointLow;
       } else {
         console.log('Bad request'); // TODO
         return;
@@ -98,10 +120,10 @@ var TemperatureSettingTrait = {
 
   query: function () {
     return {
-      thermostatMode: this.thermostatMode,
-      thermostatTemperatureSetpoint: this.thermostatTemperatureSetpoint,
-      thermostatTemperatureAmbient: this.thermostatTemperatureAmbient,
-      thermostatHumidityAmbient: this.thermostatHumidityAmbient
+      thermostatMode: this.data.thermostatMode,
+      thermostatTemperatureSetpoint: this.data.thermostatTemperatureSetpoint,
+      thermostatTemperatureAmbient: this.data.thermostatTemperatureAmbient,
+      thermostatHumidityAmbient: this.data.thermostatHumidityAmbient
     };
   },
 
@@ -114,18 +136,28 @@ var TemperatureSettingTrait = {
       availableThermostatModes: 'off,heat,cool,on',
       thermostatTemperatureUnit: 'C'
     };
+  },
+
+  getData: function () {
+    return this.data;
+  },
+
+  setData: function (data) {
+    this.data = data;
   }
 };
 
 
 var togglesTrait = {
-  mode_cool: true,
+  data: {
+    mode_cool: true
+  },
 
   execute: function (command) {
     if (command.command == 'action.devices.commands.SetToggles') {
       if (command.params.hasOwnProperty('updateToggleSettings') && typeof command.params.updateToggleSettings == 'object' &&
-          command.params.updateToggleSettings.hasOwnProperty('cool')) {
-        this.mode_cool = this.command.params.updateToggleSettings.cool;
+        command.params.updateToggleSettings.hasOwnProperty('cool')) {
+        this.data.mode_cool = this.command.params.updateToggleSettings.cool;
       } else {
         console.log('Bad request'); // TODO
         return;
@@ -136,7 +168,7 @@ var togglesTrait = {
   query: function (request) {
     return {
       currentToggleSettings: [{
-        cool: this.mode_cool,
+        cool: this.data.mode_cool,
         lang: 'en'
       }]
     };
@@ -156,6 +188,14 @@ var togglesTrait = {
         }]
       }]
     };
+  },
+
+  getData: function () {
+    return this.data;
+  },
+
+  setData: function (data) {
+    this.data = data;
   }
 };
 

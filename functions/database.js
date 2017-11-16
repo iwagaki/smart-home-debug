@@ -43,7 +43,7 @@ var devices = {};
     let device = Object.create(base.baseDevice);
     device.id = 'ID5';
     device.type = 'action.devices.types.DRYER';
-    device.name = 'Dryer 2';
+    device.name = 'Dryer 1';
     device.traits = [Object.create(traitsObject.toggles)];
     devices[device.id] = device;
 }
