@@ -10,21 +10,21 @@ var realtimeDatabase = {
   loadDatabase: function (key, obj) {
     admin.database().ref(key).once('value')
       .then(snapshot => {
-        obj = snapshot.val();
-        console.log('loaded: ' + JSON.stringify(obj));
+        obj.data = snapshot.val();
+        console.log('loaded: ' + JSON.stringify(obj.data));
       }).catch(error => {
-        console.log('Can't access to database', error);
+        console.log('Can\'t access to database', error);
       });
   },
 
   updateDatabase: function (key, obj) {
     const ref = admin.database().ref(key);
 
-    ref.set(obj, error => {
+    ref.set(obj.data, error => {
       if (error) {
         console.log('save error', error.message);
       } else {
-        console.log('saved: ' + JSON.stringify(obj));
+        console.log('saved: ' + JSON.stringify(obj.data));
       }
     });
   },
