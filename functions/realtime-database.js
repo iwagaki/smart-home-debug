@@ -21,8 +21,8 @@ var realtimeDatabase = {
     const ref = admin.database().ref(key);
 
     ref.set(obj.data, error => {
-      if (error) {
-        console.log('save error', error.message);
+      if (error) { 
+        console.log('Can\'t access to database', error);
       } else {
         console.log('saved: ' + JSON.stringify(obj.data));
       }
