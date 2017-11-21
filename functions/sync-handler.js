@@ -14,8 +14,6 @@ function sync(body, response) {
   var agentUserId = '100'; // TODO: should be an unique hash number for each user
   var devicesArray = deviceManager.getSyncDevicesArray();
 
-  //  sleep(5);
-
   var responseData = {
     requestId: body.requestId,
     payload: {

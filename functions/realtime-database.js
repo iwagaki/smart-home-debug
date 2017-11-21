@@ -8,26 +8,37 @@ admin.initializeApp({
 
 var realtimeDatabase = {
   loadDatabase: function (key, obj) {
-    admin.database().ref(key).once('value')
+    return admin.database().ref(key).once('value')
       .then(snapshot => {
         obj.data = snapshot.val();
         console.log('loaded: ' + JSON.stringify(obj.data));
-      }).catch(error => {
+      })
+      .catch(error => {
         console.log('Can\'t access to database', error);
       });
   },
 
   updateDatabase: function (key, obj) {
     const ref = admin.database().ref(key);
-
-    ref.set(obj.data, error => {
-      if (error) { 
+    return ref.set(obj.data, error => {
+      if (error) {
         console.log('Can\'t access to database', error);
       } else {
         console.log('saved: ' + JSON.stringify(obj.data));
       }
     });
   },
+
+  update2Database: function (obj) {
+    const ref = admin.database().ref();
+    return ref.update(obj.data, error => {
+      if (error) {
+        console.log('Can\'t access to database', error);
+      } else {
+        console.log('saved: ' + JSON.stringify(obj.data));
+      }
+    });
+  }
 
 };
 

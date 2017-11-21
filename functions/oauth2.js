@@ -1,18 +1,24 @@
 const db = require('./realtime-database');
 
-var accountManager = {
+var tokenManager = {
   data: {
     authTokenCount: 1000,
     accessTokenCount: 1000,
     refreshTokenCount: 1000
   },
 
-  loadDatabase: function () {
-    db.realtimeDatabase.loadDatabase('users', this);
+  getFuncToGetPromiseToLoad: function () {
+    var self = this;
+    return function () {
+      return db.realtimeDatabase.loadDatabase('users', self);
+    };
   },
 
-  updateDatabase: function () {
-    db.realtimeDatabase.updateDatabase('users', this);
+  getFuncToGetPromiseToUpdate: function () {
+    var self = this;
+    return function() {
+      return db.realtimeDatabase.updateDatabase('users', self);
+    };
   },
 
   getAuthToken: function () {
@@ -29,22 +35,18 @@ var accountManager = {
 
   updateAuthToken: function () {
     this.data.authTokenCount++;
-    this.updateDatabase();
   },
 
   updateAccessToken: function () {
     this.data.accessTokenCount++;
-    this.updateDatabase();
   },
 
   updateRefreshToken: function () {
     this.data.refreshTokenCount++;
-    this.updateDatabase();
   }
 };
 
-//accountManager.updateDatabase();
-accountManager.loadDatabase();
-console.log(JSON.stringify(accountManager.data));
+//tokenManager.updateDatabase();
+//tokenManager.loadDatabase();
 
-exports.accountManager = accountManager;
+exports.tokenManager = tokenManager;

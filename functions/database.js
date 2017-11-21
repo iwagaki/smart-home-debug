@@ -48,6 +48,5 @@ var devices = {};
   devices[device.id] = device;
 }
 
-
 exports.devices = devices;
 

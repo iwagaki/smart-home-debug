@@ -1,13 +1,6 @@
+const rdb = require('./realtime-database');
 const db = require('./database');
 
-// const admin = require('firebase-admin');
-// const serviceAccount = require('./home-debugger-a13a19250360.json');
-
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: 'https://home-debugger-c86f2.firebaseio.com/'
-// });
 
 var deviceManager = {
   getSyncDevicesArray: function () {
@@ -77,32 +70,35 @@ var deviceManager = {
     return responseArray;
   },
 
-  loadDatabase: function () {
-    // admin.database().ref("/devices").once("value")
-    //   .then(snapshot => {
-    //     database = snapshot.val();
-
-    //   }).catch(error => {
-    //     console.log("Can't access to database", error);
-    //   });
+  getFuncToGetPromiseToLoad: function () {
+    var obj = { data: {} };
+    return function () {
+      return rdb.realtimeDatabase.loadDatabase('devices', obj).then(() => {
+        for (var key in db.devices) {
+          db.devices[key].setData(obj.data[key]);
+        }
+      });
+    };
   },
 
-  updateDatabase: function () {
-    const ref = admin.database().ref('/users');
+  getFuncToGetPromiseToUpdate: function () {
+    return function () {
+      var obj = {
+        data: {
+          '/devices/': {}
+        }
+      };
 
-    var databaseData = {};
+      for (var key in db.devices) {
+        obj.data['/devices/'][key] = db.devices[key].getData();
+      }
 
-    for (var key in db.devices)
-      databaseData[key] = db.devices[key].getData();
-
-    // ref.set(databaseData, error => {
-    //   if (error) {
-    //     console.log("devices: save error", error.message);
-    //   } else {
-    //     console.log('devices: save success' + databaseData);
-    //   }
-    // });
+      return rdb.realtimeDatabase.update2Database(obj);
+    };
   }
 };
+
+//deviceManager.getFuncToGetPromiseToUpdate()(); //.then(() => { });
+
 
 exports.deviceManager = deviceManager;

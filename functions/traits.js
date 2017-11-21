@@ -25,16 +25,7 @@ var brightnessTrait = {
 
   getAttributes: function () {
     return {};
-  },
-
-  getData: function () {
-    return this.data;
-  },
-
-  setData: function (data) {
-    this.data = data;
   }
-
 };
 
 
@@ -64,14 +55,6 @@ var onOffTrait = {
 
   getAttributes: function () {
     return {};
-  },
-
-  getData: function () {
-    return this.data;
-  },
-
-  setData: function (data) {
-    this.data = data;
   }
 };
 
@@ -143,14 +126,6 @@ var TemperatureSettingTrait = {
       availableThermostatModes: 'off,heat,cool,on,heatcool',
       thermostatTemperatureUnit: 'C'
     };
-  },
-
-  getData: function () {
-    return this.data;
-  },
-
-  setData: function (data) {
-    this.data = data;
   }
 };
 
@@ -195,14 +170,6 @@ var togglesTrait = {
         }]
       }]
     };
-  },
-
-  getData: function () {
-    return this.data;
-  },
-
-  setData: function (data) {
-    this.data = data;
   }
 };
 

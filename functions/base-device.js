@@ -47,18 +47,26 @@ var baseDevice = {
       this.traits[i].execute(command);
   },
 
-  getData: function () {
-    var dataArray = [];
-    for (var i = 0; i < this.traits.length; i++)
-      dataArray.push(this.traits[i].getData());
+  getShortTraitName: function (traitName) {
+    return traitName.split('.')[3]; // 'action.devices.traits.OnOff' ==> 'OnOff'
 
-    return dataArray;
   },
 
-  setData: function (dataArray) {
-    if (dataArray.length == this.traits.length)
-      for (var i = 0; i < this.traits.length; i++)
-        this.traits[i].setData(dataArray[i]);
+  getData: function () {
+    var dataDict = {};
+    for (var i = 0; i < this.traits.length; i++) {
+      var traitKey = this.getShortTraitName(this.traits[i].getTraitName());
+      dataDict[traitKey] = this.traits[i].data;
+    }
+
+    return dataDict;
+  },
+
+  setData: function (dataDict) {
+    for (var i = 0; i < this.traits.length; i++) {
+      var traitKey = this.getShortTraitName(this.traits[i].getTraitName());
+      this.traits[i].data = dataDict[traitKey];
+    }
   }
 };
 
