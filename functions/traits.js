@@ -16,7 +16,7 @@ var brightnessTrait = {
   },
 
   query: function (request) {
-    return { brightness: this.data.brightness };
+    return this.data;
   },
 
   getTraitName: function () {
@@ -46,7 +46,7 @@ var onOffTrait = {
   },
 
   query: function () {
-    return { on: this.data.on };
+    return this.data;
   },
 
   getTraitName: function () {
@@ -109,12 +109,7 @@ var TemperatureSettingTrait = {
   },
 
   query: function () {
-    return {
-      thermostatMode: this.data.thermostatMode,
-      thermostatTemperatureSetpoint: this.data.thermostatTemperatureSetpoint,
-      thermostatTemperatureAmbient: this.data.thermostatTemperatureAmbient,
-      thermostatHumidityAmbient: this.data.thermostatHumidityAmbient
-    };
+    return this.data;
   },
 
   getTraitName: function () {
