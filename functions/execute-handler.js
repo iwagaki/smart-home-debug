@@ -1,12 +1,11 @@
-const devices = require('./devices');
-
-var deviceManager = devices.deviceManager;
+const deviceManagerInstance = require('./device-manager');
+const deviceManager = deviceManagerInstance.deviceManager;
 
 function execute(body, response) {
   var input = body.inputs[0];
 
   if (!input.hasOwnProperty('payload') || !input.payload.hasOwnProperty('commands') || !Array.isArray(input.payload.commands)) {
-    response.status(401).json({error: 'bad request'});
+    response.status(401).json({ error: 'bad request' });
     return;
   }
 

@@ -1,6 +1,5 @@
-const devices = require('./devices');
-
-var deviceManager = devices.deviceManager;
+const deviceManagerInstance = require('./device-manager');
+const deviceManager = deviceManagerInstance.deviceManager;
 
 function query(body, response) {
   var input = body.inputs[0];

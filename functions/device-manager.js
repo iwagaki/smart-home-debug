@@ -1,20 +1,22 @@
-const rdb = require('./realtime-database');
-const db = require('./database');
+const realtimeDatabaseInstance = require('./realtime-database');
+const realtimeDatabase = realtimeDatabaseInstance.realtimeDatabase;
 
+const deviceListInstance = require('./device-list');
+const devices = deviceListInstance.devices;
 
 var deviceManager = {
   getSyncDevicesArray: function () {
     var devicesArray = [];
-    for (var key in db.devices) {
-      devicesArray.push(db.devices[key].getSyncData());
+    for (var key in devices) {
+      devicesArray.push(devices[key].getSyncData());
     }
     return devicesArray;
   },
   getQueryDevicesDict: function (devicesArray) {
     var devicesDict = {};
     for (var i = 0; i < devicesArray.length; i++) {
-      if (devicesArray[i].id in db.devices)
-        Object.assign(devicesDict, db.devices[devicesArray[i].id].getQueryData());
+      if (devicesArray[i].id in devices)
+        Object.assign(devicesDict, devices[devicesArray[i].id].getQueryData());
       else
         console.log('Bad ID') // TODO
     }
@@ -37,7 +39,7 @@ var deviceManager = {
       var executionCommands = command.execution;
 
       for (var j = 0; j < executionDevices.length; j++) {
-        if (executionDevices[j].id in db.devices) {
+        if (executionDevices[j].id in devices) {
           updateDevices[executionDevices[j].id] = 1;
 
           for (var k = 0; k < executionCommands.length; k++) {
@@ -48,7 +50,7 @@ var deviceManager = {
               continue;
             }
 
-            db.devices[executionDevices[j].id].execute(command);
+            devices[executionDevices[j].id].execute(command);
           }
         } else {
           console.log('Bad ID') // TODO
@@ -58,7 +60,7 @@ var deviceManager = {
 
     var responseArray = [];
     for (key in updateDevices) {
-      var dict1 = db.devices[key].getQueryData();
+      var dict1 = devices[key].getQueryData();
       var key = Object.keys(dict1)[0];
       var responseData = {
         ids: [key],
@@ -73,9 +75,9 @@ var deviceManager = {
   getFuncToGetPromiseToLoad: function () {
     var obj = { data: {} };
     return function () {
-      return rdb.realtimeDatabase.loadDatabase('devices', obj).then(() => {
-        for (var key in db.devices) {
-          db.devices[key].setData(obj.data[key]);
+      return realtimeDatabase.loadDatabase('devices', obj).then(() => {
+        for (var key in devices) {
+          devices[key].setData(obj.data[key]);
         }
       });
     };
@@ -89,16 +91,15 @@ var deviceManager = {
         }
       };
 
-      for (var key in db.devices) {
-        obj.data['/devices/'][key] = db.devices[key].getData();
+      for (var key in devices) {
+        obj.data['/devices/'][key] = devices[key].getData();
       }
 
-      return rdb.realtimeDatabase.update2Database(obj);
+      return realtimeDatabase.update2Database(obj);
     };
   }
 };
 
 //deviceManager.getFuncToGetPromiseToUpdate()(); //.then(() => { });
-
 
 exports.deviceManager = deviceManager;

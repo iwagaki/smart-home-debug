@@ -1,4 +1,5 @@
-const db = require('./realtime-database');
+const realtimeDatabaseInstance = require('./realtime-database');
+const realtimeDatabase = realtimeDatabaseInstance.realtimeDatabase;
 
 var tokenManager = {
   data: {
@@ -10,14 +11,14 @@ var tokenManager = {
   getFuncToGetPromiseToLoad: function () {
     var self = this;
     return function () {
-      return db.realtimeDatabase.loadDatabase('users', self);
+      return realtimeDatabase.loadDatabase('users', self);
     };
   },
 
   getFuncToGetPromiseToUpdate: function () {
     var self = this;
-    return function() {
-      return db.realtimeDatabase.updateDatabase('users', self);
+    return function () {
+      return realtimeDatabase.updateDatabase('users', self);
     };
   },
 
@@ -47,6 +48,5 @@ var tokenManager = {
 };
 
 //tokenManager.updateDatabase();
-//tokenManager.loadDatabase();
 
 exports.tokenManager = tokenManager;

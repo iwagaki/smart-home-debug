@@ -1,7 +1,5 @@
-const devices = require('./devices');
-//'use strict';
-
-var deviceManager = devices.deviceManager;
+const deviceManagerInstance = require('./device-manager');
+const deviceManager = deviceManagerInstance.deviceManager;
 
 function sleep(seconds) {
   console.log('Sleeping ' + seconds + 's');

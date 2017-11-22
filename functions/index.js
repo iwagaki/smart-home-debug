@@ -1,11 +1,17 @@
 const functions = require('firebase-functions');
 const util = require('util');
+const express = require('express');
+
 const syncHandler = require('./sync-handler');
 const queryHandler = require('./query-handler');
 const executeHandler = require('./execute-handler');
-const oauth = require('./oauth2');
-const express = require('express');
-const devices = require('./devices');
+
+const tokenManagerInstance = require('./token-manager');
+const tokenManager = tokenManagerInstance.tokenManager;
+
+const deviceManagerInstance = require('./device-manager');
+const deviceManager = deviceManagerInstance.deviceManager;
+
 
 // To share some variables between oauth and HA2 modules,
 // all endpoints are implemented under the single endpoint (/homeAutomation)
@@ -18,20 +24,20 @@ function getUid(request) {
   if (request.headers.authorization) {
     let authorization_strings = request.headers.authorization.split(' ');
     if (authorization_strings[0].toLowerCase() == 'bearer') {
-      if (authorization_strings[1] == oauth.tokenManager.getAccessToken()) // TODO
+      if (authorization_strings[1] == tokenManager.getAccessToken()) // TODO
         return '1234'; // TODO
     }
   }
 
-  console.log('Bad access token: ' + oauth.tokenManager.getAccessToken());
+  console.log('Bad access token: ' + tokenManager.getAccessToken());
 
   return null;
 }
 
 // Home automation endpoint
 app.post('/', (request, response) => {
-  oauth.tokenManager.getFuncToGetPromiseToLoad()()
-    .then(devices.deviceManager.getFuncToGetPromiseToLoad())
+  tokenManager.getFuncToGetPromiseToLoad()()
+    .then(deviceManager.getFuncToGetPromiseToLoad())
     .then(() => {
       var headers = request.headers;
       var body = request.body;
@@ -70,13 +76,13 @@ app.post('/', (request, response) => {
           response.status(401).json({ error: 'bad intent' });
       }
     })
-    .then(devices.deviceManager.getFuncToGetPromiseToUpdate())
-    .then(oauth.tokenManager.getFuncToGetPromiseToUpdate());
+    .then(deviceManager.getFuncToGetPromiseToUpdate())
+    .then(tokenManager.getFuncToGetPromiseToUpdate());
 });
 
 // oauth2 Authentication endpoint
 app.all('/auth', (request, response) => {
-  oauth.tokenManager.getFuncToGetPromiseToLoad()()
+  tokenManager.getFuncToGetPromiseToLoad()()
     .then(() => {
       var headers = request.headers;
       var body = request.body;
@@ -94,21 +100,21 @@ app.all('/auth', (request, response) => {
         return;
       }
 
-      oauth.tokenManager.updateAuthToken();
+      tokenManager.updateAuthToken();
 
       response.redirect(util.format('%s?code=%s&state=%s',
         redirect_uri,
-        oauth.tokenManager.getAuthToken(),
+        tokenManager.getAuthToken(),
         state
       ))
     })
-    .then(oauth.tokenManager.getFuncToGetPromiseToUpdate());
+    .then(tokenManager.getFuncToGetPromiseToUpdate());
 });
 
 
 // oauth2 Token endpoint
 app.post('/token', (request, response) => {
-  oauth.tokenManager.getFuncToGetPromiseToLoad()()
+  tokenManager.getFuncToGetPromiseToLoad()()
     .then(() => {
       var headers = request.headers;
       var body = request.body;
@@ -131,26 +137,26 @@ app.post('/token', (request, response) => {
 
       if (grant_type == 'refresh_token') {
         var refreshToken = request.query.refresh_token ? request.query.refresh_token : request.body.refresh_token;
-        if (refreshToken != oauth.tokenManager.getRefreshToken()) {
-          console.log('Bad refresh token: expected:' + oauth.tokenManager.getRefreshToken() + ' refresh_token: ' + refreshToken);
+        if (refreshToken != tokenManager.getRefreshToken()) {
+          console.log('Bad refresh token: expected:' + tokenManager.getRefreshToken() + ' refresh_token: ' + refreshToken);
           response.status(400).json({ error: 'invalid_grant' });
           return;
         }
         console.log('*** refresh token ***');
       } else if (grant_type == 'authorization_code') {
         var code = request.query.code ? request.query.code : request.body.code;
-        if (code != oauth.tokenManager.getAuthToken()) {
-          console.log('Bad auth token: expected:' + oauth.tokenManager.getAuthToken() + ' code: ' + code);
+        if (code != tokenManager.getAuthToken()) {
+          console.log('Bad auth token: expected:' + tokenManager.getAuthToken() + ' code: ' + code);
           response.status(400).json({ error: 'invalid_grant' });
           return;
         }
         console.log('*** auth token ***');
       }
 
-      oauth.tokenManager.updateAccessToken();
-      oauth.tokenManager.updateRefreshToken();
-      var newAccessToken = oauth.tokenManager.getAccessToken();
-      var newRefreshToken = oauth.tokenManager.getRefreshToken();
+      tokenManager.updateAccessToken();
+      tokenManager.updateRefreshToken();
+      var newAccessToken = tokenManager.getAccessToken();
+      var newRefreshToken = tokenManager.getRefreshToken();
 
       var responseData = {
         token_type: 'bearer', // Required
@@ -162,7 +168,7 @@ app.post('/token', (request, response) => {
       console.log(responseData);
       response.status(200).json(responseData);
     })
-    .then(oauth.tokenManager.getFuncToGetPromiseToUpdate());
+    .then(tokenManager.getFuncToGetPromiseToUpdate());
 });
 
 exports.homeAutomation = functions.https.onRequest(app);
