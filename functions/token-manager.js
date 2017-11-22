@@ -49,6 +49,6 @@ var tokenManager = {
 
 // Initialize 'users' data if the database doesn't have the key
 realtimeDatabase.hasChildPromise('users')
-.catch(tokenManager.getFuncToGetPromiseToUpdate());
+  .catch(tokenManager.getFuncToGetPromiseToUpdate());
 
 exports.tokenManager = tokenManager;
