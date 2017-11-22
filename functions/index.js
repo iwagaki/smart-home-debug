@@ -13,12 +13,7 @@ const deviceManagerInstance = require('./device-manager');
 const deviceManager = deviceManagerInstance.deviceManager;
 
 
-// To share some variables between oauth and HA2 modules,
-// all endpoints are implemented under the single endpoint (/homeAutomation)
 var app = express();
-
-// TODO: How to handle a JSON parse error?
-
 
 function getUid(request) {
   if (request.headers.authorization) {

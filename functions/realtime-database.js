@@ -29,17 +29,18 @@ var realtimeDatabase = {
     });
   },
 
-  update2Database: function (obj) {
-    const ref = admin.database().ref();
-    return ref.update(obj.data, error => {
-      if (error) {
-        console.log('Can\'t access to database', error);
-      } else {
-        console.log('saved: ' + JSON.stringify(obj.data));
-      }
-    });
+  hasChildPromise: function (key) {
+    return admin.database().ref().once('value')
+      .then(snapshot => {
+        return new Promise(function (resolve, reject) {
+          if (snapshot.hasChild(key)) {
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      });
   }
-
 };
 
 exports.realtimeDatabase = realtimeDatabase;

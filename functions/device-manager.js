@@ -88,20 +88,20 @@ var deviceManager = {
   getFuncToGetPromiseToUpdate: function () {
     return function () {
       var obj = {
-        data: {
-          '/devices/': {}
-        }
+        data: {}
       };
 
       for (var key in devices) {
-        obj.data['/devices/'][key] = devices[key].getData();
+        obj.data[key] = devices[key].getData();
       }
 
-      return realtimeDatabase.update2Database(obj);
+      return realtimeDatabase.updateDatabase('devices', obj);
     };
   }
 };
 
-//deviceManager.getFuncToGetPromiseToUpdate()(); //.then(() => { });
+// Initialize 'devices' data if the database doesn't have the key
+realtimeDatabase.hasChildPromise('devices')
+  .catch(deviceManager.getFuncToGetPromiseToUpdate());
 
 exports.deviceManager = deviceManager;
