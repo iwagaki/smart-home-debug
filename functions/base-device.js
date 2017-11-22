@@ -5,6 +5,7 @@ var baseDevice = {
   willReportState: true,
   online: true,
   traits: [],
+
   getSyncData: function () {
     var traitsArray = []
     for (var i = 0; i < this.traits.length; i++)
@@ -33,6 +34,7 @@ var baseDevice = {
 
     return responseData;
   },
+
   getQueryData: function () {
     var responseData = {}
     responseData[this.id] = { online: this.online };
@@ -42,6 +44,7 @@ var baseDevice = {
 
     return responseData;
   },
+
   execute: function (command) {
     for (var i = 0; i < this.traits.length; i++)
       this.traits[i].execute(command);

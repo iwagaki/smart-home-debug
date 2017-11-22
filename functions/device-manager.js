@@ -12,6 +12,7 @@ var deviceManager = {
     }
     return devicesArray;
   },
+
   getQueryDevicesDict: function (devicesArray) {
     var devicesDict = {};
     for (var i = 0; i < devicesArray.length; i++) {
@@ -22,6 +23,7 @@ var deviceManager = {
     }
     return devicesDict;
   },
+
   getExecuteCommandsArray: function (commandsArray) {
     var updateDevices = {};
 
