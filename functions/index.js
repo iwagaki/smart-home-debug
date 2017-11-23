@@ -13,8 +13,6 @@ const deviceManagerInstance = require('./device-manager');
 const deviceManager = deviceManagerInstance.deviceManager;
 
 
-var app = express();
-
 function getUid(request) {
   if (request.headers.authorization) {
     let authorization_strings = request.headers.authorization.split(' ');
@@ -29,8 +27,9 @@ function getUid(request) {
   return null;
 }
 
+
 // Home automation endpoint
-app.post('/', (request, response) => {
+exports.homeAutomation = functions.https.onRequest((request, response) => {
   tokenManager.getFuncToGetPromiseToLoad()()
     .then(deviceManager.getFuncToGetPromiseToLoad())
     .then(() => {
@@ -75,8 +74,9 @@ app.post('/', (request, response) => {
     .then(tokenManager.getFuncToGetPromiseToUpdate());
 });
 
+
 // oauth2 Authentication endpoint
-app.all('/auth', (request, response) => {
+exports.auth = functions.https.onRequest((request, response) => {
   tokenManager.getFuncToGetPromiseToLoad()()
     .then(() => {
       var headers = request.headers;
@@ -108,7 +108,7 @@ app.all('/auth', (request, response) => {
 
 
 // oauth2 Token endpoint
-app.post('/token', (request, response) => {
+exports.token = functions.https.onRequest((request, response) => {
   tokenManager.getFuncToGetPromiseToLoad()()
     .then(() => {
       var headers = request.headers;
@@ -165,5 +165,3 @@ app.post('/token', (request, response) => {
     })
     .then(tokenManager.getFuncToGetPromiseToUpdate());
 });
-
-exports.homeAutomation = functions.https.onRequest(app);
