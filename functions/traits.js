@@ -59,6 +59,37 @@ var onOffTrait = {
 };
 
 
+var colorSpectrumTrait = {
+  data: {
+    spectrumRGB: 16777215,
+  },
+
+  execute: function (command) {
+    if (command.command == 'action.devices.commands.ColorAbsolute') {
+      if (command.params.hasOwnProperty('spectrumRGB') && typeof command.params.spectrumRGB == 'number' &&
+        command.params.spectrumRGB >= 0 && command.params.spectrumRGB <= 16777215) {
+        this.data.spectrumRGB = command.params.spectrumRGB;
+      } else {
+        console.log('Bad request'); // TODO
+        return;
+      }
+    }
+  },
+
+  query: function (request) {
+    return this.data;
+  },
+
+  getTraitName: function () {
+    return 'action.devices.traits.ColorSpectrum';
+  },
+
+  getAttributes: function () {
+    return {};
+  }
+};
+
+
 var TemperatureSettingTrait = {
   data: {
     thermostatMode: 'off',
@@ -171,5 +202,6 @@ var togglesTrait = {
 
 exports.onOff = onOffTrait;
 exports.brightness = brightnessTrait;
+exports.colorSpectrum = colorSpectrumTrait;
 exports.temperatureSetting = TemperatureSettingTrait;
 exports.toggles = togglesTrait;

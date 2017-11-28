@@ -8,7 +8,7 @@ var devices = {};
   device.id = 'ID1';
   device.type = 'action.devices.types.LIGHT';
   device.name = 'Light 1';
-  device.traits = [Object.create(traitsObject.onOff), Object.create(traitsObject.brightness)];
+  device.traits = [Object.create(traitsObject.onOff), Object.create(traitsObject.brightness), Object.create(traitsObject.colorSpectrum)];
   devices[device.id] = device;
 }
 
