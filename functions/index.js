@@ -1,6 +1,5 @@
 const functions = require('firebase-functions');
 const util = require('util');
-const express = require('express');
 
 const syncHandler = require('./sync-handler');
 const queryHandler = require('./query-handler');
