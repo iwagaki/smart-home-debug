@@ -1,9 +1,9 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('./home-debugger-a13a19250360.json');
+const serviceAccount = require('./smart-home-debug-dev-firebase-adminsdk.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://home-debugger-c86f2.firebaseio.com/'
+  databaseURL: 'https://smart-home-debug-dev.firebaseio.com/'
 });
 
 var realtimeDatabase = {
